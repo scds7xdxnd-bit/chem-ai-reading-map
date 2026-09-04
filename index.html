@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A chapter-by-chapter reading companion for 파이썬을 이용한 화학 인공지능 (Chemical AI Using Python).">
+<style>
+  :root { color-scheme: light dark; }
+  html, body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Chemical AI Reading Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+
+<style>
+:root {
+  --paper:      #F6F2F4;
+  --card:       #FFFFFF;
+  --card-sunk:  #F0EAEE;
+  --ink:        #241C24;
+  --ink-soft:   #4A3D48;
+  --muted:      #6C5F68;
+  --rule:       #E3D9DE;
+  --rule-firm:  #CFC0C8;
+  --wine:       #9A3350;
+  --wine-wash:  #F2E2E7;
+  --amber:      #A6690B;
+  --amber-wash: #F4E9D6;
+  --coda:       #5A5560;
+  --coda-wash:  #E9E5EA;
+  --shadow:     0 1px 2px rgba(36,28,36,.05), 0 8px 24px -14px rgba(36,28,36,.22);
+
+  --sans: "IBM Plex Sans", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --serif: "Spectral", "Noto Serif KR", Georgia, "Apple SD Gothic Neo", serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #16121A;
+    --card:       #1F1A23;
+    --card-sunk:  #262029;
+    --ink:        #EDE3E9;
+    --ink-soft:   #D3C5CD;
+    --muted:      #A2939D;
+    --rule:       #352C3A;
+    --rule-firm:  #4B3F51;
+    --wine:       #E5849B;
+    --wine-wash:  #35222A;
+    --amber:      #DCA84C;
+    --amber-wash: #322817;
+    --coda:       #A79FAE;
+    --coda-wash:  #2A2530;
+    --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper:      #16121A;
+  --card:       #1F1A23;
+  --card-sunk:  #262029;
+  --ink:        #EDE3E9;
+  --ink-soft:   #D3C5CD;
+  --muted:      #A2939D;
+  --rule:       #352C3A;
+  --rule-firm:  #4B3F51;
+  --wine:       #E5849B;
+  --wine-wash:  #35222A;
+  --amber:      #DCA84C;
+  --amber-wash: #322817;
+  --coda:       #A79FAE;
+  --coda-wash:  #2A2530;
+  --shadow:     0 1px 2px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.7);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--wine); }
+
+:focus-visible {
+  outline: 2px solid var(--wine);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* ---------- arc theming: one variable drives every accent ---------- */
+.arc-data  { --arc: var(--wine);  --arc-wash: var(--wine-wash); }
+.arc-qm    { --arc: var(--amber); --arc-wash: var(--amber-wash); }
+.arc-coda  { --arc: var(--coda);  --arc-wash: var(--coda-wash); }
+
+/* ---------- shell ---------- */
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px 96px;
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+/* ---------- the ladder: nav + page-budget chart in one object ---------- */
+.ladder {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  height: calc(100vh - 96px);
+  min-height: 420px;
+  padding-top: 4px;
+}
+
+.ladder-cap {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 5px;
+}
+
+.rung {
+  flex-grow: var(--pages);
+  flex-basis: 0;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 9px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--arc);
+  background: var(--card);
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: background .16s ease, transform .16s ease;
+  overflow: hidden;
+}
+
+.rung:hover { background: var(--arc-wash); transform: translateX(2px); }
+
+.rung-n {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--arc);
+  line-height: 1;
+}
+
+.rung-p {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ladder-foot {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  padding-top: 7px;
+  border-top: 1px solid var(--rule);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+/* ---------- masthead ---------- */
+.masthead { padding: 52px 0 26px; }
+
+.imprint {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.title-ko {
+  font-family: var(--serif);
+  font-size: clamp(34px, 5.4vw, 54px);
+  font-weight: 600;
+  line-height: 1.12;
+  margin: 0;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+
+.title-en {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(17px, 2.2vw, 23px);
+  font-weight: 400;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--muted);
+}
+.byline b { color: var(--ink-soft); font-weight: 500; }
+
+.lede {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.62;
+  color: var(--ink-soft);
+  max-width: 62ch;
+  margin: 26px 0 0;
+}
+
+/* ---------- progress bar ---------- */
+.progress {
+  margin: 30px 0 0;
+  padding: 15px 18px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.progress-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.progress-track {
+  flex: 1 1 160px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--card-sunk);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--wine);
+  border-radius: 3px;
+  transition: width .3s ease;
+}
+
+.progress-count {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.progress-sync {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  flex-basis: 100%;
+}
+
+/* ---------- generic section heads ---------- */
+.band { margin-top: 60px; }
+
+.band-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule-firm);
+}
+
+.band-head h2 {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+.band-head .eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.prose { max-width: 66ch; }
+.prose p { margin: 0 0 14px; color: var(--ink-soft); }
+.prose p:last-child { margin-bottom: 0; }
+
+/* ---------- two-arcs explainer ---------- */
+.arcs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.arc-card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--arc);
+  border-radius: 5px;
+  padding: 16px 18px 18px;
+}
+
+.arc-card h3 {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 3px;
+  color: var(--arc);
+}
+
+.arc-span {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.arc-card p { margin: 0; font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; }
+
+/* ---------- chapter blocks ---------- */
+.chapter {
+  margin-top: 46px;
+  scroll-margin-top: 20px;
+}
+
+.ch-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--arc);
+}
+
+.ch-medallion {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--arc-wash);
+  color: var(--arc);
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ch-titles h3 {
+  font-family: var(--serif);
+  font-size: 23px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+
+.ch-sub {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.ch-sub .pg { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+.ch-gist {
+  margin: 16px 0 20px;
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  max-width: 64ch;
+}
+.ch-gist strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- section rows ---------- */
+.sections { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+
+.sec {
+  display: grid;
+  grid-template-columns: 22px 44px minmax(0,1fr) 44px;
+  gap: 14px;
+  align-items: start;
+  padding: 11px 4px 11px 0;
+  border-top: 1px solid var(--rule);
+}
+.sec:last-child { border-bottom: 1px solid var(--rule); }
+
+.sec-box { display: flex; align-items: center; justify-content: center; padding-top: 2px; cursor: pointer; }
+.sec-box input { position: absolute; opacity: 0; width: 18px; height: 18px; cursor: pointer; }
+
+.tick {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--rule-firm);
+  border-radius: 3px;
+  background: var(--card);
+  display: block;
+  position: relative;
+  transition: background .12s ease, border-color .12s ease;
+}
+.tick::after {
+  content: "";
+  position: absolute;
+  left: 4.5px; top: 1px;
+  width: 4px; height: 8.5px;
+  border: solid var(--card);
+  border-width: 0 2px 2px 0;
+  transform: rotate(42deg) scale(0);
+  transition: transform .14s ease;
+}
+.sec-box input:checked + .tick { background: var(--arc); border-color: var(--arc); }
+.sec-box input:checked + .tick::after { transform: rotate(42deg) scale(1); }
+.sec-box input:focus-visible + .tick { outline: 2px solid var(--arc); outline-offset: 2px; }
+
+.sec.done .sec-title, .sec.done .sec-note { opacity: .5; }
+
+.sec-no {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--arc);
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
+}
+
+.sec-title {
+  font-size: 14.5px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.sec-en { color: var(--muted); font-weight: 400; font-style: italic; font-family: var(--serif); font-size: 14px; }
+.sec-note { margin: 3px 0 0; font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 64ch; }
+.sec-note code { font-family: var(--mono); font-size: 12px; background: var(--card-sunk); padding: 1px 4px; border-radius: 3px; color: var(--ink-soft); }
+
+.sec-pg {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding-top: 3px;
+}
+
+/* ---------- flag callouts inside chapters ---------- */
+.flag {
+  margin-top: 18px;
+  padding: 13px 16px;
+  background: var(--arc-wash);
+  border-radius: 4px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 66ch;
+}
+.flag b { color: var(--arc); font-weight: 600; }
+.flag code { font-family: var(--mono); font-size: 12.5px; }
+
+/* ---------- glossary ---------- */
+.glossary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.term {
+  background: var(--card);
+  padding: 14px 16px 15px;
+}
+
+.term dt {
+  font-weight: 600;
+  font-size: 13.5px;
+  margin: 0 0 4px;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.term dt .ref {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+  border: 1px solid var(--rule-firm);
+  border-radius: 2px;
+  padding: 0 4px;
+  white-space: nowrap;
+}
+.term dd { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.term dd code, .term dd .smiles {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- practice notes ---------- */
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 5px; overflow: hidden; }
+.note { background: var(--card); padding: 15px 18px; display: grid; grid-template-columns: 88px minmax(0,1fr); gap: 18px; align-items: baseline; }
+.note-tag { font-family: var(--mono); font-size: 10px; letter-spacing: .09em; text-transform: uppercase; color: var(--wine); }
+.note p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+.note p b { color: var(--ink); font-weight: 600; }
+.note code { font-family: var(--mono); font-size: 12.5px; background: var(--card-sunk); padding: 1px 5px; border-radius: 3px; }
+
+/* ---------- reading path ---------- */
+.path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.path-step {
+  padding: 5px 11px;
+  border-radius: 3px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-bottom: 2px solid var(--arc);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.path-arrow { color: var(--rule-firm); }
+
+footer {
+  margin-top: 64px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0,1fr); gap: 0; padding: 0 18px 72px; }
+  .ladder {
+    position: static;
+    height: auto;
+    min-height: 0;
+    flex-direction: row;
+    gap: 2px;
+    padding-top: 20px;
+  }
+  .ladder-cap, .ladder-foot { display: none; }
+  .rung { min-height: 46px; flex-direction: column; justify-content: center; gap: 2px; padding: 0 4px; border-left: 1px solid var(--rule); border-bottom: 3px solid var(--arc); }
+  .rung-n { font-size: 15px; }
+  .rung-p { font-size: 9px; }
+  .masthead { padding-top: 30px; }
+  .sec { grid-template-columns: 22px 40px minmax(0,1fr); gap: 10px; }
+  .sec-pg { display: none; }
+  .note { grid-template-columns: minmax(0,1fr); gap: 5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="ladder" aria-label="Chapters, rung height proportional to page count">
+    <div class="ladder-cap">Pages</div>
+    <a class="rung arc-data" href="#ch1" style="--pages:50"><span class="rung-n">1</span><span class="rung-p">50p</span></a>
+    <a class="rung arc-data" href="#ch2" style="--pages:32"><span class="rung-n">2</span><span class="rung-p">32p</span></a>
+    <a class="rung arc-data" href="#ch3" style="--pages:104"><span class="rung-n">3</span><span class="rung-p">104p</span></a>
+    <a class="rung arc-data" href="#ch4" style="--pages:58"><span class="rung-n">4</span><span class="rung-p">58p</span></a>
+    <a class="rung arc-qm" href="#ch5" style="--pages:80"><span class="rung-n">5</span><span class="rung-p">80p</span></a>
+    <a class="rung arc-qm" href="#ch6" style="--pages:30"><span class="rung-n">6</span><span class="rung-p">30p</span></a>
+    <a class="rung arc-coda" href="#ch7" style="--pages:10"><span class="rung-n">7</span><span class="rung-p">10p</span></a>
+    <a class="rung arc-coda" href="#appendix" style="--pages:38"><span class="rung-n">부</span><span class="rung-p">38p</span></a>
+    <div class="ladder-foot">Rung height =<br>chapter length</div>
+  </nav>
+
+  <main>
+
+    <header class="masthead">
+      <p class="imprint">사이플러스 Science plus · 2024</p>
+      <h1 class="title-ko">파이썬을 이용한 화학 인공지능</h1>
+      <p class="title-en">Chemical Artificial Intelligence Using Python</p>
+      <div class="byline">
+        <span>지은이 <b>정근홍</b></span>
+        <span>머리말 <b>2024. 9. 10</b></span>
+        <span><b>7</b> chapters · <b>2</b> appendices · <b>412</b> pages</span>
+      </div>
+      <p class="lede">Two books bound as one. Chapters 1–4 build molecular property prediction from data upward — SMILES to fingerprints to gradient boosting to neural nets. Chapters 5–6 come at chemistry from the opposite direction entirely, solving the Schrödinger equation in NumPy and then driving real quantum-chemistry software. They meet only in the reader.</p>
+
+      <div class="progress">
+        <span class="progress-label">Sections read</span>
+        <span class="progress-track"><span class="progress-fill" id="fill"></span></span>
+        <span class="progress-count" id="count">0 / 50</span>
+        <span class="progress-sync" id="sync">Tracking progress on this device.</span>
+      </div>
+    </header>
+
+    <section class="band">
+      <div class="band-head">
+        <h2>The two arcs</h2>
+        <span class="eyebrow">Where the weight sits</span>
+      </div>
+      <div class="prose">
+        <p>The page budget gives the book away. Chapter 3 alone is 104 pages — a full scikit-learn course — and Chapter 5 is 80 pages of quantum mechanics with no machine learning in it at all. Chapter 7 is ten pages. Read the ladder on the left as a bar chart and the shape is obvious.</p>
+      </div>
+      <div class="arcs">
+        <div class="arc-card arc-data">
+          <h3>Data arc</h3>
+          <span class="arc-span">Ch 1–4 · pp. 11–254 · 244 pages</span>
+          <p>Empirical and bottom-up. Molecules become vectors, vectors become models. Nothing here needs physics — a fingerprint is a hash of substructures, and a random forest neither knows nor cares what an electron is.</p>
+        </div>
+        <div class="arc-card arc-qm">
+          <h3>Physics arc</h3>
+          <span class="arc-span">Ch 5–6 · pp. 255–364 · 110 pages</span>
+          <p>First-principles and top-down. You derive quantization from boundary conditions, then hand the hard cases to Gaussian or PySCF. Independent of Ch 1–4 — readable first if the physics is what pulls you.</p>
+        </div>
+        <div class="arc-card arc-coda">
+          <h3>Coda &amp; appendices</h3>
+          <span class="arc-span">Ch 7 + 부록 · pp. 365–412 · 48 pages</span>
+          <p>ChatGPT worked examples, a Python primer, and a Colab guide closing on recent research. 부록 1 belongs at the front if your Python is rusty — read it first regardless of where it is bound.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="band-head">
+        <h2>Chapter map</h2>
+        <span class="eyebrow">50 sections · tick as you go</span>
+      </div>
+
+      <!-- ================= CH 1 ================= -->
+      <article class="chapter arc-data" id="ch1">
+        <div class="ch-head">
+          <span class="ch-medallion">1</span>
+          <div class="ch-titles">
+            <h3>인공지능과 화학의 만남</h3>
+            <div class="ch-sub"><span>AI meets chemistry</span><span class="pg">pp. 11–60</span><span>9 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">The foundation, and it solves exactly one problem: <strong>machine learning eats vectors of numbers, but chemistry hands you molecules.</strong> Everything in this chapter is that conversion.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.1</span><div><h4 class="sec-title">화학 물질의 구조와 표현 <span class="sec-en">Structure &amp; representation</span></h4><p class="sec-note">SMILES (aspirin is <code>CC(=O)Oc1ccccc1C(=O)O</code>), InChI/InChIKey, MOL/SDF. One molecule has many valid SMILES but exactly one InChI — which is why InChI is the database key.</p></div><span class="sec-pg">12</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.2</span><div><h4 class="sec-title">화학 물질 표현 인자 <span class="sec-en">Descriptors</span></h4><p class="sec-note">MW, LogP, TPSA, H-bond donors/acceptors, rotatable bonds. RDKit ships ~200. Physically meaningful, which is why a forest on descriptors stays interpretable.</p></div><span class="sec-pg">13</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.3"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.3</span><div><h4 class="sec-title">화학에서 사용되는 Python과 구글 코랩 <span class="sec-en">Python &amp; Colab</span></h4><p class="sec-note">Environment setup. Sensible here — RDKit and PySCF installs are painful locally, and Colab gives you a free GPU for Ch 4.</p></div><span class="sec-pg">18</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.4"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.4</span><div><h4 class="sec-title">RDKIT과 화학정보학 <span class="sec-en">RDKit &amp; cheminformatics</span></h4><p class="sec-note">The core library. <code>Chem.MolFromSmiles()</code>, SMARTS substructure matching, sanitization, 2D depiction, conformers. If you take one thing from Ch 1, take this.</p></div><span class="sec-pg">24</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.5"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.5</span><div><h4 class="sec-title">분자 속성 시각화 <span class="sec-en">Property visualization</span></h4><p class="sec-note">Drawing molecules, coloring atoms by contribution. Sets up the visualization that matters later: which substructure drove a prediction.</p></div><span class="sec-pg">32</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.6"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.6</span><div><h4 class="sec-title">화학 표현자 변환 <span class="sec-en">Format conversion</span></h4><p class="sec-note">SMILES ↔ InChI ↔ MOL, plus canonicalization. Reads like plumbing, but duplicates hiding under different SMILES are a top cause of inflated scores.</p></div><span class="sec-pg">34</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.7"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.7</span><div><h4 class="sec-title">화학 지문과 표현법 <span class="sec-en">Fingerprints</span></h4><p class="sec-note">The central idea of the field. Hash every substructure within radius r of each atom into bit positions → a 2048-bit vector (Morgan/ECFP). Also MACCS's 166 predefined keys. This is how a variable-size graph becomes fixed-size input.</p></div><span class="sec-pg">37</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.8"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.8</span><div><h4 class="sec-title">화학적 유사도 계산 <span class="sec-en">Similarity</span></h4><p class="sec-note">Tanimoto: shared bits ÷ total bits set. Encodes the field's founding assumption — similar structure, similar property. Know that it has teeth: activity cliffs break it.</p></div><span class="sec-pg">46</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="1.9"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">1.9</span><div><h4 class="sec-title">화학 반응 예측 <span class="sec-en">Reaction prediction</span></h4><p class="sec-note">Reaction SMARTS and templates: encode a transformation as a pattern, apply to reactants, get products. Rule-based retrosynthesis in miniature.</p></div><span class="sec-pg">52</span></li>
+        </ul>
+      </article>
+
+      <!-- ================= CH 2 ================= -->
+      <article class="chapter arc-data" id="ch2">
+        <div class="ch-head">
+          <span class="ch-medallion">2</span>
+          <div class="ch-titles">
+            <h3>화학 정보의 탐색: Chemical Space와 빅데이터</h3>
+            <div class="ch-sub"><span>Chemical space &amp; big data</span><span class="pg">pp. 61–92</span><span>2 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">Short, but it is the pivot from <strong>one molecule</strong> to <strong>millions</strong>.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="2.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">2.1</span><div><h4 class="sec-title">화학 물질의 '화학 공간' 이해 <span class="sec-en">Chemical space</span></h4><p class="sec-note">The space of all possible molecules — ~10⁶⁰ drug-like, more than the atoms in the solar system. Each descriptor is a dimension. Reduce with PCA/t-SNE/UMAP to see the region your data occupies, and learn to distrust predictions outside it (applicability domain).</p></div><span class="sec-pg">61</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="2.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">2.2</span><div><h4 class="sec-title">빅데이터 활용과 웹 스크래핑 기술 소개 <span class="sec-en">Data sources &amp; scraping</span></h4><p class="sec-note">PubChem, ChEMBL, ZINC, the PDB. Likely <code>requests</code> + BeautifulSoup plus PUG-REST.</p></div><span class="sec-pg">64</span></li>
+        </ul>
+        <p class="flag"><b>In practice</b> — prefer the official REST APIs over HTML scraping. PubChem and ChEMBL both publish one, they are rate-limit friendly, and they survive page redesigns. If the chapter demonstrates HTML scraping, treat it as pedagogy.</p>
+      </article>
+
+      <!-- ================= CH 3 ================= -->
+      <article class="chapter arc-data" id="ch3">
+        <div class="ch-head">
+          <span class="ch-medallion">3</span>
+          <div class="ch-titles">
+            <h3>머신러닝과 화학특성: 회귀 모델과 분류 모델</h3>
+            <div class="ch-sub"><span>Regression &amp; classification</span><span class="pg">pp. 93–196</span><span>14 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">The largest chapter at <strong>104 pages</strong> — a full scikit-learn course on chemical datasets. Sections 3.2–3.11 climb a deliberate ladder from simplest to strongest, roughly 6–8 pages each: theory sketch, then worked code.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.1</span><div><h4 class="sec-title">기계 학습 기초 <span class="sec-en">ML fundamentals</span></h4><p class="sec-note">Train/test split, over- and underfitting, cross-validation, the bias–variance tradeoff.</p></div><span class="sec-pg">94</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.2</span><div><h4 class="sec-title">다항 회귀 <span class="sec-en">Polynomial regression</span></h4><p class="sec-note">Linear regression on powers of the features. Introduces overfitting viscerally — raise the degree and watch it memorize noise.</p></div><span class="sec-pg">95</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.3"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.3</span><div><h4 class="sec-title">릿지 회귀 <span class="sec-en">Ridge / L2</span></h4><p class="sec-note">Penalizes coefficient size, shrinking smoothly. Matters here because fingerprint bits are heavily correlated.</p></div><span class="sec-pg">104</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.4"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.4</span><div><h4 class="sec-title">라쏘 회귀 <span class="sec-en">Lasso / L1</span></h4><p class="sec-note">Drives coefficients to exactly zero, so it selects features. With 2048 bits, it names the handful that matter.</p></div><span class="sec-pg">113</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.5"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.5</span><div><h4 class="sec-title">엘라스틱넷 회귀 <span class="sec-en">Elastic net</span></h4><p class="sec-note">L1 + L2. The practical default when features outnumber samples — which in cheminformatics is nearly always.</p></div><span class="sec-pg">120</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.6"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.6</span><div><h4 class="sec-title">로지스틱 회귀 <span class="sec-en">Logistic regression</span></h4><p class="sec-note">Linear model through a sigmoid into a probability. The baseline every classification paper reports.</p></div><span class="sec-pg">127</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.7"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.7</span><div><h4 class="sec-title">결정 트리 <span class="sec-en">Decision tree</span></h4><p class="sec-note">Nested if/else splits. Fully interpretable, individually weak.</p></div><span class="sec-pg">134</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.8"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.8</span><div><h4 class="sec-title">랜덤 포레스트 <span class="sec-en">Random forest</span></h4><p class="sec-note">Hundreds of trees on bootstrapped samples, averaged. <b>The honest baseline in cheminformatics</b> — hard to beat on fingerprints, free feature importances, almost no tuning.</p></div><span class="sec-pg">140</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.9"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.9</span><div><h4 class="sec-title">서포트 벡터 머신 <span class="sec-en">SVM</span></h4><p class="sec-note">Maximum-margin boundary; the kernel trick handles nonlinearity. Strong on small datasets — which describes most chemistry datasets.</p></div><span class="sec-pg">145</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.10"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.10</span><div><h4 class="sec-title">K-최근접 이웃 <span class="sec-en">KNN</span></h4><p class="sec-note">Predict from the k most similar molecules. Note this <em>is</em> §1.8 turned into an algorithm — with Tanimoto as the metric, KNN is read-across from analogs, exactly what a medicinal chemist does by hand.</p></div><span class="sec-pg">152</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.11"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.11</span><div><h4 class="sec-title">XGBOOST <span class="sec-en">Gradient boosting</span></h4><p class="sec-note">Trees built sequentially, each correcting the last one's errors. Usually the top performer on tabular molecular data — and the number Ch 4 has to beat.</p></div><span class="sec-pg">157</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.12"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.12</span><div><h4 class="sec-title">머신러닝 알고리즘: 분류 모델 <span class="sec-en">Classification framing</span></h4><p class="sec-note">The same algorithms recast for labels: active/inactive, toxic/safe.</p></div><span class="sec-pg">163</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.13"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.13</span><div><h4 class="sec-title">분류 모델의 평가와 성능 개선 <span class="sec-en">Evaluation</span></h4><p class="sec-note">Confusion matrix, precision/recall, ROC-AUC — and class imbalance. Real bioactivity sets run 1–5% actives, so accuracy is meaningless: predicting "inactive" always scores 97%.</p></div><span class="sec-pg">174</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="3.14"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">3.14</span><div><h4 class="sec-title">고급 분류 모델 <span class="sec-en">Advanced classifiers</span></h4><p class="sec-note">Ensembling and stacking, on the evidence of its placement.</p></div><span class="sec-pg">177</span></li>
+        </ul>
+      </article>
+
+      <!-- ================= CH 4 ================= -->
+      <article class="chapter arc-data" id="ch4">
+        <div class="ch-head">
+          <span class="ch-medallion">4</span>
+          <div class="ch-titles">
+            <h3>딥러닝을 활용한 화학 특성 분석</h3>
+            <div class="ch-sub"><span>Deep learning for chemical properties</span><span class="pg">pp. 197–254</span><span>5 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">Read the page numbers: 4.1–4.4 sit on pages 197, 198, 199 and 201 — one page each — and <strong>4.5 runs 202 to 254</strong>. This is one 52-page build with a compressed preamble, not five balanced sections.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="4.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">4.1</span><div><h4 class="sec-title">딥러닝의 개념과 화학 특성 분석의 적용 <span class="sec-en">Concepts</span></h4><p class="sec-note">Layers, weights, activation functions, backpropagation.</p></div><span class="sec-pg">197</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="4.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">4.2</span><div><h4 class="sec-title">딥러닝 모델의 구성과 화학 특성 분석에의 적용 <span class="sec-en">Architecture</span></h4><p class="sec-note">Assembling a network for molecular input.</p></div><span class="sec-pg">198</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="4.3"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">4.3</span><div><h4 class="sec-title">딥러닝 모델의 학습과 성능 평가 <span class="sec-en">Training &amp; evaluation</span></h4><p class="sec-note">Loss, optimizers, epochs and batches.</p></div><span class="sec-pg">199</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="4.4"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">4.4</span><div><h4 class="sec-title">딥러닝을 활용한 화학 특성 분석의 활용과 한계 <span class="sec-en">Uses and limits</span></h4><p class="sec-note">A good sign that the limits get their own section. The honest one: deep learning wants thousands to millions of examples; a typical chemistry dataset has hundreds. That is precisely why §3.11 often wins.</p></div><span class="sec-pg">201</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="4.5"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">4.5</span><div><h4 class="sec-title">화학 특성 예측 모델 <span class="sec-en">The build — 52 pages</span></h4><p class="sec-note">Build and train a property predictor end to end, presumably Keras or PyTorch on fingerprints or descriptors: architecture, training loop, dropout and early stopping, evaluation against the Ch 3 baselines.</p></div><span class="sec-pg">202</span></li>
+        </ul>
+        <p class="flag"><b>Likely absent</b> — given 58 pages and a 2024 preface, graph neural networks (message passing over the molecular graph, atoms as nodes and bonds as edges) and pretrained chemical transformers such as ChemBERTa. That is where the field actually sits now. If the chapter stops at an MLP on fingerprints, this is your natural extension point.</p>
+      </article>
+
+      <!-- ================= CH 5 ================= -->
+      <article class="chapter arc-qm" id="ch5">
+        <div class="ch-head">
+          <span class="ch-medallion">5</span>
+          <div class="ch-titles">
+            <h3>양자화학의 기초</h3>
+            <div class="ch-sub"><span>Foundations of quantum chemistry</span><span class="pg">pp. 255–334</span><span>10 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">Eighty pages and a genuine change of register. Chapters 1–4 are data-driven; this is first-principles physics with <strong>no machine learning in it at all</strong> — solving the Schrödinger equation numerically in Python. The sections follow the canonical order of increasing difficulty every physical-chemistry course uses.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.1</span><div><h4 class="sec-title">양자화학의 기본 이론 <span class="sec-en">Postulates</span></h4><p class="sec-note">ψ contains everything knowable; |ψ|² is a probability density; observables are operators; Ĥψ = Eψ is an eigenvalue problem.</p></div><span class="sec-pg">255</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.2</span><div><h4 class="sec-title">파동 함수의 개념과 특성 <span class="sec-en">The wavefunction</span></h4><p class="sec-note">Normalization, orthogonality, expectation values.</p></div><span class="sec-pg">257</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.3"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.3</span><div><h4 class="sec-title">무한히 깊은 퍼텐셜 상자 <span class="sec-en">Particle in a box</span></h4><p class="sec-note">The simplest exactly-solvable system. E ∝ n² falls out of the boundary conditions alone — quantization stops being an assertion and becomes a result. Numerically: discretize the axis, build Ĥ as a matrix, call an eigensolver. Twenty lines of NumPy.</p></div><span class="sec-pg">266</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.4"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.4</span><div><h4 class="sec-title">2차원 퍼텐셜 상자 <span class="sec-en">2D box</span></h4><p class="sec-note">Introduces degeneracy: (n=1,2) and (2,1) share an energy. Degeneracy is what later explains orbital shells and selection rules.</p></div><span class="sec-pg">271</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.5"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.5</span><div><h4 class="sec-title">조화 진동 운동 <span class="sec-en">Harmonic oscillator</span></h4><p class="sec-note">The model of a vibrating bond and the basis of IR spectroscopy. Zero-point energy appears: a bond never stops vibrating, even at 0 K.</p></div><span class="sec-pg">276</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.6"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.6</span><div><h4 class="sec-title">양자 터널링 효과와 유한 퍼텐셜 <span class="sec-en">Tunneling</span></h4><p class="sec-note">Nonzero probability of crossing a barrier it cannot climb. Chemically real — proton tunneling speeds enzyme reactions and produces kinetic isotope effects.</p></div><span class="sec-pg">286</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.7"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.7</span><div><h4 class="sec-title">양자 역학의 회전운동과 에너지 준위 <span class="sec-en">Rotation</span></h4><p class="sec-note">Rigid rotor, angular momentum, spherical harmonics. Underlies rotational and microwave spectroscopy.</p></div><span class="sec-pg">293</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.8"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.8</span><div><h4 class="sec-title">수소 원자의 양자 상태와 파동 함수 <span class="sec-en">The hydrogen atom</span></h4><p class="sec-note">The last system solvable exactly by hand. n, ℓ, m emerge from the mathematics, and the shapes they produce <em>are</em> the s/p/d orbitals from general chemistry. The payoff of 5.3–5.7.</p></div><span class="sec-pg">297</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.9"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.9</span><div><h4 class="sec-title">양자화학의 분자구조 적용 <span class="sec-en">Molecules</span></h4><p class="sec-note">Past hydrogen nothing is exact: Born–Oppenheimer, LCAO molecular orbitals, the variational principle, Hartree–Fock, basis sets. This section sets up Chapter 6.</p></div><span class="sec-pg">306</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="5.10"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">5.10</span><div><h4 class="sec-title">Python 코딩 응용 <span class="sec-en">Implementations</span></h4><p class="sec-note">The code for everything above.</p></div><span class="sec-pg">329</span></li>
+        </ul>
+      </article>
+
+      <!-- ================= CH 6 ================= -->
+      <article class="chapter arc-qm" id="ch6">
+        <div class="ch-head">
+          <span class="ch-medallion">6</span>
+          <div class="ch-titles">
+            <h3>Python과 양자화학 소프트웨어의 활용</h3>
+            <div class="ch-sub"><span>Driving QC software from Python</span><span class="pg">pp. 335–364</span><span>6 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">Thirty pages — a usage guide, not a theory chapter. You stop writing solvers and start <strong>driving production software</strong>.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="6.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">6.1</span><div><h4 class="sec-title">양자화학 소프트웨어 일반 <span class="sec-en">Overview</span></h4><p class="sec-note">What this class of program is for.</p></div><span class="sec-pg">335</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="6.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">6.2</span><div><h4 class="sec-title">주요 양자화학 소프트웨어 도구 소개 <span class="sec-en">The tool landscape</span></h4><p class="sec-note">Gaussian, ORCA, PySCF, Psi4, NWChem.</p></div><span class="sec-pg">336</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="6.3"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">6.3</span><div><h4 class="sec-title">양자화학 소프트웨어의 기본 기능 <span class="sec-en">Job types</span></h4><p class="sec-note">Geometry optimization, frequency calculation (confirms a true minimum, gives IR), single-point energy, and property analysis — HOMO, LUMO, the gap, dipole moment, atomic charges. Also the method/basis notation you will see as <code>B3LYP/6-31G*</code>.</p></div><span class="sec-pg">338</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="6.4"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">6.4</span><div><h4 class="sec-title">양자화학 소프트웨어의 활용 사례 <span class="sec-en">Case studies</span></h4><p class="sec-note">Worked applications.</p></div><span class="sec-pg">339</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="6.5"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">6.5</span><div><h4 class="sec-title">Gaussian 양자화학 계산과 Python <span class="sec-en">Python as wrapper</span></h4><p class="sec-note">Generate input files, launch jobs, parse the output logs, batch across many molecules.</p></div><span class="sec-pg">341</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="6.6"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">6.6</span><div><h4 class="sec-title">Gaussian 양자화학 계산과 Python in Windows <span class="sec-en">Windows setup</span></h4><p class="sec-note">Platform-specific installation and paths.</p></div><span class="sec-pg">344</span></li>
+        </ul>
+        <p class="flag"><b>License note</b> — Gaussian is commercial and expensive. <code>pip install pyscf</code> is free, open source, runs in Colab, and covers everything you need. Psi4 likewise. Substitute it and the chapter's logic transfers directly.</p>
+      </article>
+
+      <!-- ================= CH 7 ================= -->
+      <article class="chapter arc-coda" id="ch7">
+        <div class="ch-head">
+          <span class="ch-medallion">7</span>
+          <div class="ch-titles">
+            <h3>ChatGPT 활용과 예</h3>
+            <div class="ch-sub"><span>ChatGPT in chemistry</span><span class="pg">pp. 365–374</span><span>2 sections</span></div>
+          </div>
+        </div>
+        <p class="ch-gist">Ten pages. Set expectations accordingly: written in 2024, so it <strong>predates tool use, function calling and code execution</strong> becoming standard.</p>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="7.1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">7.1</span><div><h4 class="sec-title">서론 <span class="sec-en">Introduction</span></h4><p class="sec-note">Framing.</p></div><span class="sec-pg">365</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="7.2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">7.2</span><div><h4 class="sec-title">ChatGPT를 이용한 화학과 양자화학 문제 해결의 사례 <span class="sec-en">Worked examples</span></h4><p class="sec-note">Prompting for chemistry and quantum-chemistry problems. The 2026 version of this chapter is not "ask it a question" but "give it RDKit and PySCF as tools and let it run the pipeline".</p></div><span class="sec-pg">366</span></li>
+        </ul>
+        <p class="flag"><b>The real caution</b> — LLMs hallucinate SMILES strings and invent plausible property values. Round-trip anything chemical through <code>Chem.MolFromSmiles()</code>: if it returns <code>None</code>, the molecule was never real.</p>
+      </article>
+
+      <!-- ================= APPENDIX ================= -->
+      <article class="chapter arc-coda" id="appendix">
+        <div class="ch-head">
+          <span class="ch-medallion">부</span>
+          <div class="ch-titles">
+            <h3>부록 · Appendices</h3>
+            <div class="ch-sub"><span>Python primer, Colab, recent research</span><span class="pg">pp. 375–412</span><span>index p. 413</span></div>
+          </div>
+        </div>
+        <ul class="sections">
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="A1"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">부1</span><div><h4 class="sec-title">Python 기본 <span class="sec-en">Python primer</span></h4><p class="sec-note">Bound at the back, belongs at the front. Read it first if your Python is rusty.</p></div><span class="sec-pg">375</span></li>
+          <li class="sec"><label class="sec-box"><input type="checkbox" data-id="A2"><span class="tick" aria-hidden="true"></span></label><span class="sec-no">부2</span><div><h4 class="sec-title">Colab 사용법부터 최신 연구 소개 <span class="sec-en">Colab &amp; recent research</span></h4><p class="sec-note">Environment guide closing on a survey of current work.</p></div><span class="sec-pg">385</span></li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ================= GLOSSARY ================= -->
+    <section class="band">
+      <div class="band-head">
+        <h2>Terms of art</h2>
+        <span class="eyebrow">Vocabulary the book assumes</span>
+      </div>
+      <dl class="glossary">
+        <div class="term"><dt>SMILES <span class="ref">§1.1</span></dt><dd>A molecule as a string. Letters are atoms, lowercase means aromatic, parentheses branch, digits open and close rings. <span class="smiles">CC(=O)Oc1ccccc1C(=O)O</span> is aspirin.</dd></div>
+        <div class="term"><dt>InChIKey <span class="ref">§1.1</span></dt><dd>A fixed-length hash of the standardized identifier. One per molecule regardless of how it was drawn — the right database key.</dd></div>
+        <div class="term"><dt>Descriptor <span class="ref">§1.2</span></dt><dd>A computed number summarizing a molecule: MW, LogP, TPSA. Physically interpretable, unlike a fingerprint bit.</dd></div>
+        <div class="term"><dt>ECFP / Morgan <span class="ref">§1.7</span></dt><dd>Substructures within radius r of each atom, hashed into a 2048-bit vector. Turns a variable-size graph into fixed-size model input.</dd></div>
+        <div class="term"><dt>Tanimoto <span class="ref">§1.8</span></dt><dd>Shared bits ÷ total bits set — the field's default similarity. 1.0 identical, &gt;0.7 conventionally "similar".</dd></div>
+        <div class="term"><dt>Activity cliff <span class="ref">§1.8</span></dt><dd>Two near-identical molecules with wildly different activity. Where the similar-property principle — and any model built on it — breaks.</dd></div>
+        <div class="term"><dt>Chemical space <span class="ref">§2.1</span></dt><dd>The abstract space of all possible molecules, ~10⁶⁰ drug-like. Each descriptor is an axis; each molecule a point.</dd></div>
+        <div class="term"><dt>Applicability domain <span class="ref">§2.1</span></dt><dd>The region where a model has seen neighbors, and therefore the only region where its predictions mean anything.</dd></div>
+        <div class="term"><dt>Scaffold split <span class="ref">not in book</span></dt><dd>Splitting train/test by Murcko scaffold rather than at random, so analogs cannot appear on both sides. The single most important habit to bring from outside.</dd></div>
+        <div class="term"><dt>Class imbalance <span class="ref">§3.13</span></dt><dd>Real bioactivity sets are 1–5% active. Accuracy is meaningless there; use ROC-AUC or precision–recall.</dd></div>
+        <div class="term"><dt>Zero-point energy <span class="ref">§5.5</span></dt><dd>The residual vibration a bond keeps at absolute zero. A direct consequence of quantization, not a measurement artifact.</dd></div>
+        <div class="term"><dt>Born–Oppenheimer <span class="ref">§5.9</span></dt><dd>Nuclei are thousands of times heavier than electrons, so freeze them and solve for the electrons alone. The approximation every practical method rests on.</dd></div>
+        <div class="term"><dt>Variational principle <span class="ref">§5.9</span></dt><dd>Any trial wavefunction gives an energy at or above the true ground state — so lower is strictly better, which makes optimization well posed.</dd></div>
+        <div class="term"><dt>Basis set <span class="ref">§5.9</span></dt><dd>The set of functions molecular orbitals are built from. <code>6-31G*</code> names one; bigger is more accurate and far more expensive.</dd></div>
+        <div class="term"><dt>HOMO–LUMO gap <span class="ref">§6.3</span></dt><dd>The energy between the highest occupied and lowest unoccupied orbital. Correlates with reactivity, color, and conductivity — and makes an excellent ML feature.</dd></div>
+        <div class="term"><dt>Geometry optimization <span class="ref">§6.3</span></dt><dd>Search for the lowest-energy 3D arrangement of nuclei. Always follow it with a frequency job: no imaginary frequencies means you found a real minimum.</dd></div>
+      </dl>
+    </section>
+
+    <!-- ================= NOTES ================= -->
+    <section class="band">
+      <div class="band-head">
+        <h2>Before you start</h2>
+        <span class="eyebrow">Four things worth knowing</span>
+      </div>
+      <ul class="notes">
+        <li class="note"><span class="note-tag">Splitting</span><p><b>Use scaffold splits, not random splits.</b> A random split puts near-identical analogs in both train and test, inflating every score in Chapters 3 and 4 by a wide margin. RDKit ships <code>MurckoScaffold</code>. This is the one correction to apply throughout.</p></li>
+        <li class="note"><span class="note-tag">Software</span><p><b>Substitute PySCF for Gaussian.</b> Free, open source, installs in Colab with one line. Everything Chapter 6 teaches transfers, and you keep your money.</p></li>
+        <li class="note"><span class="note-tag">Order</span><p><b>The two arcs are independent.</b> Chapters 5–6 assume nothing from 1–4. Start wherever your interest is, and read 부록 1 first if the Python is new.</p></li>
+        <li class="note"><span class="note-tag">Baseline</span><p><b>Benchmark Chapter 4 against Chapter 3.</b> On a few thousand molecules with fingerprint features, XGBoost frequently beats a neural network. A deep learning chapter that does not report the gradient-boosting number has not told you whether it won.</p></li>
+      </ul>
+
+      <div class="path arc-data">
+        <span class="path-step">부록 1</span><span class="path-arrow">→</span>
+        <span class="path-step">Ch 1</span><span class="path-arrow">→</span>
+        <span class="path-step">Ch 2</span><span class="path-arrow">→</span>
+        <span class="path-step">Ch 3 · the lift</span><span class="path-arrow">→</span>
+        <span class="path-step">Ch 4</span><span class="path-arrow">⇢</span>
+        <span class="path-step arc-qm">Ch 5</span><span class="path-arrow">→</span>
+        <span class="path-step arc-qm">Ch 6</span><span class="path-arrow">⇢</span>
+        <span class="path-step arc-coda">Ch 7</span>
+      </div>
+    </section>
+
+    <footer>
+      Reading map compiled from the table of contents (pp. 7–9) and cover. Section glosses explain the standard content of each topic and are not quotations from the text.<br>
+      파이썬을 이용한 화학 인공지능 · 정근홍 지음 · 사이플러스 · 2024
+    </footer>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.sec-box input'));
+  var fill = document.getElementById('fill');
+  var count = document.getElementById('count');
+  var sync = document.getElementById('sync');
+  var total = boxes.length;
+  var LS_KEY = 'chem-ai-reading-map';
+  var docRef = null;
+  var applying = false;
+
+  function render() {
+    var done = 0;
+    boxes.forEach(function (b) {
+      if (b.checked) { done++; }
+      var row = b.closest('.sec');
+      if (row) { row.classList.toggle('done', b.checked); }
+    });
+    fill.style.width = (total ? (done / total) * 100 : 0) + '%';
+    count.textContent = done + ' / ' + total;
+  }
+
+  function state() {
+    var o = {};
+    boxes.forEach(function (b) { if (b.checked) { o[b.dataset.id] = true; } });
+    return o;
+  }
+
+  function apply(o) {
+    applying = true;
+    boxes.forEach(function (b) { b.checked = !!(o && o[b.dataset.id]); });
+    applying = false;
+    render();
+  }
+
+  // Local read first, so the page is correct before any network answers.
+  try {
+    var raw = localStorage.getItem(LS_KEY);
+    if (raw) { apply(JSON.parse(raw)); }
+  } catch (e) { /* private window, blocked storage */ }
+  render();
+
+  function persist() {
+    var o = state();
+    try { localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch (e) { /* ignore */ }
+    if (docRef) {
+      docRef.set({ checked: o, updatedAt: new Date().toISOString() }).catch(function () {
+        sync.textContent = 'Saved on this device — could not reach shared storage.';
+      });
+    }
+  }
+
+  boxes.forEach(function (b) {
+    b.addEventListener('change', function () {
+      if (applying) { return; }
+      render();
+      persist();
+    });
+  });
+
+  // Shared, cross-device progress when the runtime offers it.
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('db').then(function (db) {
+      if (!db) { return; }
+      docRef = db.doc('progress/reading');
+      sync.textContent = 'Progress saved across your devices.';
+      docRef.onSnapshot(function (snap) {
+        var data = snap.exists ? snap.data() : null;
+        if (data && data.checked) {
+          apply(data.checked);
+          try { localStorage.setItem(LS_KEY, JSON.stringify(data.checked)); } catch (e) { /* ignore */ }
+        }
+      }, function () {
+        sync.textContent = 'Saved on this device only.';
+      });
+    }).catch(function () { /* stay on localStorage */ });
+  }
+})();
+</script>
+
+</body>
+</html>
